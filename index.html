@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Orientalische Rezepte</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <!-- AOS für Animationen -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+  <style>
+    /* Basis-Reset und Grundstile */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Roboto', sans-serif; line-height: 1.6; background-color: #f7f7f7; color: #333; transition: background-color 0.3s, color 0.3s; }
+    a { text-decoration: none; color: inherit; }
+    .container { width: 90%; max-width: 1200px; margin: 0 auto; }
+
+    /* Dark Mode */
+    body.dark-mode { background-color: #222; color: #ddd; }
+    body.dark-mode header::after { background: rgba(0, 0, 0, 0.7); }
+    body.dark-mode nav { background: #111; }
+    body.dark-mode .filter-section, 
+    body.dark-mode .recipe-list .recipe-card, 
+    body.dark-mode .signup-section, 
+    body.dark-mode .modal-content, 
+    body.dark-mode .favorites-content { background: #333; }
+    body.dark-mode .recipe-content, 
+    body.dark-mode .recipe-list .recipe-card .favorite-btn, 
+    body.dark-mode footer { color: #ddd; }
+    body.dark-mode footer { background: #111; }
+    
+    /* Header & Featured Slider */
+    header {
+      position: relative;
+      width: 100%;
+      height: 70vh;
+      background: url('https://source.unsplash.com/1600x900/?oriental,food') no-repeat center center/cover;
+    }
+    header::after {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+    }
+    .header-overlay {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #fff;
+    }
+    .header-overlay h1 {
+      font-family: 'Scheherazade New', serif;
+      font-size: 4rem;
+      margin-bottom: 20px;
+    }
+    .header-overlay p { font-size: 1.5rem; }
+
+    /* Navigation */
+    nav {
+      background: #333;
+      padding: 10px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 110;
+    }
+    nav .container ul {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+    }
+    nav a { color: #fff; font-size: 1.1rem; transition: color 0.3s; }
+    nav a:hover { color: #e67e22; }
+    .nav-btn {
+      background: #e67e22;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .nav-btn:hover { background: #cf5a14; }
+    /* Neue Navigationslinks */
+    .nav-link {
+      color: #fff;
+      font-size: 1.1rem;
+      transition: color 0.3s;
+      padding: 10px 15px;
+    }
+    .nav-link:hover { color: #e67e22; }
+    
+    /* Featured Slider */
+    .featured-slider {
+      position: relative;
+      overflow: hidden;
+      margin: 40px auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    .featured-slider .slides {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+    }
+    .featured-slider .slide {
+      min-width: 100%;
+      position: relative;
+    }
+    .featured-slider .slide img {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+    }
+    .featured-slider .slide .slide-caption {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 5px;
+    }
+    .slider-nav {
+      position: absolute;
+      top: 50%;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      transform: translateY(-50%);
+    }
+    .slider-nav button {
+      background: rgba(0,0,0,0.5);
+      border: none;
+      color: #fff;
+      font-size: 2rem;
+      padding: 10px;
+      cursor: pointer;
+      border-radius: 50%;
+      margin: 0 20px;
+      transition: background 0.3s;
+    }
+    .slider-nav button:hover { background: rgba(0,0,0,0.8); }
+    
+    /* Filter-Sektion & Suchfeld */
+    .filter-section {
+      background: #fff;
+      padding: 20px 0;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+      border-top: 3px solid #e67e22;
+    }
+    .filter-section .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+    .filter-btn {
+      padding: 10px 20px;
+      border: none;
+      background: #e67e22;
+      color: #fff;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .filter-btn:hover, .filter-btn.active { background: #cf5a14; }
+    #searchInput {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 25px;
+      width: 250px;
+      outline: none;
+    }
+    
+    /* Rezept-Liste (vertikal) */
+    .recipe-list .recipe-card {
+      background: #fff;
+      margin-bottom: 30px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: row;
+      transition: transform 0.3s;
+    }
+    .recipe-list .recipe-card:hover { transform: translateY(-5px); }
+    .recipe-image { flex: 1; min-width: 250px; position: relative; }
+    .recipe-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    /* Favoriten-Button */
+    .favorite-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(255,255,255,0.8);
+      border: none;
+      padding: 8px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .favorite-btn:hover { background: rgba(255,255,255,1); }
+    .favorite-btn.active { color: #e67e22; }
+    .recipe-content {
+      flex: 2;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .recipe-content h2 { font-size: 2rem; margin-bottom: 10px; }
+    .recipe-content .country { font-size: 1.1rem; color: #e67e22; margin-bottom: 10px; }
+    .recipe-content .description { font-size: 1rem; margin-bottom: 15px; }
+    .recipe-content .rating { margin-bottom: 15px; }
+    .recipe-content .rating i { color: #ffcc00; margin-right: 2px; }
+    .recipe-content .read-more {
+      align-self: flex-start;
+      background: #e67e22;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .recipe-content .read-more:hover { background: #cf5a14; }
+    
+    /* Modal für Rezeptdetails inkl. Zutaten & Anleitung */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+    .modal-content {
+      background: #fff;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 700px;
+      padding: 30px;
+      position: relative;
+      animation: fadeIn 0.4s;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .close-modal {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #333;
+    }
+    /* Tabs im Modal */
+    .tabs {
+      display: flex;
+      border-bottom: 2px solid #ddd;
+      margin-bottom: 20px;
+    }
+    .tabs button {
+      flex: 1;
+      padding: 10px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: background 0.3s;
+    }
+    .tabs button.active {
+      background: #e67e22;
+      color: #fff;
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    /* Professionelles Styling für Tabellen in Zutaten */
+    .tab-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    .tab-content table th, 
+    .tab-content table td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+    }
+    .tab-content table th {
+      background-color: #f0f0f0;
+    }
+    .tab-content table tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    /* Ausführliche Anleitung */
+    .tab-content ol {
+      padding-left: 20px;
+      margin-bottom: 20px;
+    }
+    .tab-content ol li {
+      margin-bottom: 10px;
+    }
+    
+    /* Favoriten Modal */
+    .favorites-modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1100;
+      padding: 20px;
+    }
+    .favorites-content {
+      background: #fff;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 700px;
+      padding: 30px;
+      position: relative;
+      animation: fadeIn 0.4s;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .favorites-content h2 { margin-bottom: 20px; }
+    .favorites-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #ddd;
+      padding: 10px 0;
+      cursor: pointer;
+    }
+    .favorites-item span { flex: 1; }
+    .favorites-item .remove-fav {
+      background: none;
+      border: none;
+      color: #e67e22;
+      font-size: 1.2rem;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+    .close-favorites {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #333;
+    }
+    
+    /* Signup & Newsletter Bereich */
+    .signup-section {
+      background: #fff;
+      padding: 40px 20px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin: 40px 0;
+      border-radius: 10px;
+    }
+    .signup-section h2 { margin-bottom: 20px; }
+    .signup-section form {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+    .signup-section input[type="email"],
+    .signup-section input[type="text"],
+    .signup-section input[type="password"] {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      width: 250px;
+      outline: none;
+    }
+    .signup-section button {
+      padding: 10px 20px;
+      border: none;
+      background: #e67e22;
+      color: #fff;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .signup-section button:hover { background: #cf5a14; }
+    
+    /* Back-to-Top Button */
+    #backToTop {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #e67e22;
+      color: #fff;
+      padding: 10px 15px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      z-index: 100;
+      transition: background 0.3s;
+    }
+    #backToTop:hover { background: #cf5a14; }
+    
+    /* Footer */
+    footer {
+      background: #333;
+      color: #fff;
+      padding: 20px 0;
+      text-align: center;
+    }
+    footer .social a {
+      margin: 0 10px;
+      font-size: 1.5rem;
+      transition: color 0.3s;
+    }
+    footer .social a:hover { color: #e67e22; }
+    
+    /* Responsive Anpassungen */
+    @media (max-width: 768px) {
+      .recipe-list .recipe-card { flex-direction: column; }
+      .recipe-image, .recipe-content { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header data-aos="fade-down">
+    <div class="header-overlay">
+      <h1>Orientalische Rezepte</h1>
+      <p>Authentische Gerichte aus 8 Ländern</p>
+    </div>
+  </header>
+  
+  <!-- Navigation -->
+  <nav>
+    <div class="container">
+      <ul>
+        <li><a href="#featured">Startseite</a></li>
+        <li><button class="nav-btn" id="darkModeToggle">Dark Mode</button></li>
+        <li><button class="nav-btn" id="signupBtn">Anmelden</button></li>
+        <li><button class="nav-btn" id="favoritesBtn">Meine Favoriten</button></li>
+        <!-- Neue Links: "Über uns" und "Kontakt" -->
+        <li><a href="ueber-uns.html" class="nav-link">Über uns</a></li>
+        <li><a href="kontakt.html" class="nav-link">Kontakt</a></li>
+      </ul>
+    </div>
+  </nav>
+  
+  <!-- Featured Slider -->
+  <section class="featured-slider" id="featured" data-aos="fade-up">
+    <div class="slides">
+      <div class="slide">
+        <img src="tajine.jpg" alt="Tajine Huhn" />
+        <div class="slide-caption">Tajine Huhn – Marokko</div>
+      </div>
+      <div class="slide">
+        <img src="boerek.jpg" alt="Börek" />
+        <div class="slide-caption">Börek – Türkei</div>
+      </div>
+      <div class="slide">
+        <img src="tabouleh.jpg.webp" alt="Tabouleh" />
+        <div class="slide-caption">Tabouleh – Libanon</div>
+      </div>
+    </div>
+    <div class="slider-nav">
+      <button id="prevSlide"><i class="fas fa-chevron-left"></i></button>
+      <button id="nextSlide"><i class="fas fa-chevron-right"></i></button>
+    </div>
+  </section>
+  
+  <!-- Filter- und Suchsektion -->
+  <section class="filter-section" data-aos="fade-up">
+    <div class="container">
+      <button class="filter-btn active" data-filter="all">Alle</button>
+      <button class="filter-btn" data-filter="Marokko">Marokko</button>
+      <button class="filter-btn" data-filter="Türkei">Türkei</button>
+      <button class="filter-btn" data-filter="Libanon">Libanon</button>
+      <button class="filter-btn" data-filter="Ägypten">Ägypten</button>
+      <button class="filter-btn" data-filter="Iran">Iran</button>
+      <button class="filter-btn" data-filter="Indien">Indien</button>
+      <button class="filter-btn" data-filter="Jordanien">Jordanien</button>
+      <button class="filter-btn" data-filter="Oman">Oman</button>
+      <input type="text" id="searchInput" placeholder="Suche nach Rezepten..." />
+    </div>
+  </section>
+  
+  <!-- Rezeptliste -->
+  <section class="recipe-list" id="recipes" data-aos="fade-up">
+    <div class="container">
+      <!-- Hier folgt der Rest deines Codes für die Rezeptliste -->
+      <!-- ... -->
+    </div>
+  </section>
+  
+  <!-- Weitere Abschnitte können hier folgen -->
+  
+</body>
+</html>
+
+  
+  <!-- Rezeptliste -->
+  <section class="recipe-list" id="recipes" data-aos="fade-up">
+    <div class="container">
+      <!-- Rezept 1: Tajine Huhn (Marokko) -->
+      <div class="recipe-card" id="recipe-tajine" data-country="Marokko" data-title="Tajine Huhn" data-description="Ein traditionelles marokkanisches Gericht mit zartem Huhn, eingelegten Zitronen und Oliven." data-rating="4"
+           data-ingredients='<table>
+             <thead>
+               <tr><th>Zutat</th><th>Menge</th></tr>
+             </thead>
+             <tbody>
+               <tr><td>Huhn</td><td>1,2 kg</td></tr>
+               <tr><td>Zitronen</td><td>2 Stück</td></tr>
+               <tr><td>Oliven</td><td>150 g</td></tr>
+             </tbody>
+           </table>'
+           data-instructions='<ol>
+             <li>Huhn marinieren und anbraten.</li>
+             <li>Zwiebeln, Knoblauch und Gewürze hinzufügen.</li>
+             <li>Mit Wasser ablöschen und ca. 1,5 Stunden schmoren lassen.</li>
+             <li>Zum Schluss mit eingelegten Zitronen und Oliven garnieren.</li>
+           </ol>'>
+        <div class="recipe-image">
+          <img src="tajine.jpg" alt="Tajine Huhn" />
+          <button class="favorite-btn"><i class="fas fa-heart"></i></button>
+        </div>
+        <div class="recipe-content">
+          <h2>Tajine Huhn</h2>
+          <p class="country">Marokko</p>
+          <p class="description">Ein traditionelles marokkanisches Gericht mit zartem Huhn, eingelegten Zitronen und Oliven.</p>
+          <div class="rating">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <i class="fas fa-star-half-alt"></i>
+          </div>
+          <button class="read-more">Mehr erfahren <i class="fas fa-arrow-right"></i></button>
+        </div>
+      </div>
+      
+      <!-- Rezept 2: Börek (Türkei) -->
+      <div class="recipe-card" id="recipe-borek" data-country="Türkei" data-title="Börek" data-description="Knusprige Teigröllchen, gefüllt mit Spinat und Feta, ein Klassiker der türkischen Küche." data-rating="4"
+           data-ingredients='<table>
+             <thead>
+               <tr><th>Zutat</th><th>Menge</th></tr>
+             </thead>
+             <tbody>
+               <tr><td>Yufka-Teig</td><td>4 Blätter</td></tr>
+               <tr><td>Spinat</td><td>300 g</td></tr>
+               <tr><td>Feta</td><td>200 g</td></tr>
+             </tbody>
+           </table>'
+           data-instructions='<ol>
+             <li>Spinat kurz dünsten und mit zerbröckeltem Feta vermengen.</li>
+             <li>Yufka-Teig mit der Füllung belegen und aufrollen.</li>
+             <li>Im vorgeheizten Ofen bei 200°C ca. 25 Minuten backen, bis sie goldbraun sind.</li>
+             <li>Heiß servieren.</li>
+           </ol>'>
+        <div class="recipe-image">
+          <img src="boerek.jpg" alt="Börek" />
+          <button class="favorite-btn"><i class="fas fa-heart"></i></button>
+        </div>
+        <div class="recipe-content">
+          <h2>Börek</h2>
+          <p class="country">Türkei</p>
+          <p class="description">Knusprige Teigröllchen, gefüllt mit Spinat und Feta, ein Klassiker der türkischen Küche.</p>
+          <div class="rating">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <i class="fas fa-star-half-alt"></i>
+          </div>
+          <button class="read-more">Mehr erfahren <i class="fas fa-arrow-right"></i></button>
+        </div>
+      </div>
+      
+      <!-- Rezept 3: Tabouleh (Libanon) -->
+      <div class="recipe-card" id="recipe-tabouleh" data-country="Libanon" data-title="Tabouleh" data-description="Ein frischer Salat mit Bulgur, Petersilie, Tomaten und Zitronensaft." data-rating="5"
+           data-ingredients='<table>
+             <thead>
+               <tr><th>Zutat</th><th>Menge</th></tr>
+             </thead>
+             <tbody>
+               <tr><td>Bulgur</td><td>150 g</td></tr>
+               <tr><td>Petersilie</td><td>1 Bund</td></tr>
+               <tr><td>Tomaten</td><td>3 Stück</td></tr>
+             </tbody>
+           </table>'
+           data-instructions='<ol>
+             <li>Bulgur in kaltem Wasser einweichen.</li>
+             <li>Petersilie und Tomaten fein hacken und mit Bulgur vermengen.</li>
+             <li>Mit Zitronensaft, Olivenöl, Salz und Pfeffer abschmecken.</li>
+             <li>Kalt servieren.</li>
+           </ol>'>
+        <div class="recipe-image">
+          <img src="tabouleh.jpg.webp" alt="Tabouleh" />
+          <button class="favorite-btn"><i class="fas fa-heart"></i></button>
+        </div>
+        <div class="recipe-content">
+          <h2>Tabouleh</h2>
+          <p class="country">Libanon</p>
+          <p class="description">Ein frischer Salat mit Bulgur, Petersilie, Tomaten und Zitronensaft.</p>
+          <div class="rating">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+          </div>
+          <button class="read-more">Mehr erfahren <i class="fas fa-arrow-right"></i></button>
+        </div>
+      </div>
+      
+      <!-- Rezept 4: Koshari (Ägypten) -->
+      <div class="recipe-card" id="recipe-koshari" data-country="Ägypten" data-title="Koshari" data-description="Ein traditionelles ägyptisches Gericht aus Linsen, Reis, Nudeln und einer würzigen Tomatensauce." data-rating="4"
+           data-ingredients='<table>
+             <thead>
+               <tr><th>Zutat</th><th>Menge</th></tr>
+             </thead>
+             <tbody>
+               <tr><td>Linsen</td><td>200 g</td></tr>
+               <tr><td>Reis</td><td>150 g</td></tr>
+               <tr><td>Nudeln</td><td>100 g</td></tr>
+             </tbody>
+           </table>'
+           data-instructions='<ol>
+             <li>Linsen, Reis und Nudeln separat kochen.</li>
+             <li>Für die Sauce Tomaten, Zwiebeln und Gewürze köcheln lassen.</li>
+             <li>Alle Komponenten in einer Schüssel anrichten und mit knusprigen Zwiebeln garnieren.</li>
+             <li>Sofort servieren.</li>
+           </ol>'>
+        <div class="recipe-image">
+          <img src="koshari.jpg" alt="Koshari" />
+          <button class="favorite-btn"><i class="fas fa-heart"></i></button>
+        </div>
+        <div class="recipe-content">
+          <h2>Koshari</h2>
+          <p class="country">Ägypten</p>
+          <p class="description">Ein traditionelles ägyptisches Gericht aus Linsen, Reis, Nudeln und einer würzigen Tomatensauce.</p>
+          <div class="rating">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <i class="fas fa-star-half-alt"></i>
+          </div>
+          <button class="read-more">Mehr erfahren <i class="fas fa-arrow-right"></i></button>
+        </div>
+      </div>
+      
+      <!-- Rezept 5: Ghormeh Sabzi (Iran) -->
+      <div class="recipe-card" id="recipe-ghormeh" data-country="Iran" data-title="Ghormeh Sabzi" data-description="Ein aromatischer iranischer Kräutereintopf mit Lamm, Bohnen und getrockneten Limetten." data-rating="5"
+           data-ingredients='<table>
+             <thead>
+               <tr><th>Zutat</th><th>Menge</th></tr>
+             </thead>
+             <tbody>
+               <tr><td>Lammfleisch</td><td>1 kg</td></tr>
+               <tr><td>Kräutermix</td><td>300 g</td></tr>
+               <tr><td>Getrocknete Limetten</td><td>3 Stück</td></tr>
+             </tbody>
+           </table>'
+           data-instructions='<ol>
+             <li>Lammfleisch anbraten und beiseite stellen.</li>
+             <li>Großzügig gehackte Kräuter mit Zwiebeln glasig dünsten.</li>
+             <li>Lamm und Bohnen hinzufügen, mit Wasser aufgießen und langsam schmoren lassen.</li>
+             <li>Zum Schluss die zerdrückten getrockneten Limetten unterrühren und servieren.</li>
+           </ol>'>
+        <div class="recipe-image">
+          <img src="ghormehsabzi.jpg" alt="Ghormeh Sabzi" />
+          <button class="favorite-btn"><i class="fas fa-heart"></i></button>
+        </div>
+        <div class="recipe-content">
+          <h2>Ghormeh Sabzi</h2>
+          <p class="country">Iran</p>
+          <p class="description">Ein aromatischer iranischer Kräutereintopf mit Lamm, Bohnen und getrockneten Limetten.</p>
+          <div class="rating">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+          </div>
+          <button class="read-more">Mehr erfahren <i class="fas fa-arrow-right"></i></button>
+        </div>
+      </div>
+      
+      <!-- Rezept 6: Biryani (Indien) -->
+      <div class="recipe-card" id="recipe-biryani" data-country="Indien" data-title="Biryani" data-description="Würziges Reisgericht mit Hühnchen, Safran und einer Vielzahl exotischer Gewürze." data-rating="5"
+           data-ingredients='<table>
+             <thead>
+               <tr><th>Zutat</th><th>Menge</th></tr>
+             </thead>
+             <tbody>
+               <tr><td>Basmatireis</td><td>250 g</td></tr>
+               <tr><td>Hühnchen</td><td>500 g</td></tr>
+               <tr><td>Safran</td><td>eine Prise</td></tr>
+             </tbody>
+           </table>'
+           data-instructions='<ol>
+             <li>Hühnchen in Joghurt und Gewürzen marinieren.</li>
+             <li>Reis halbgar kochen und mit gebratenem Hühnchen schichten.</li>
+             <li>Mit Safranwasser beträufeln und im Ofen fertig garen.</li>
+             <li>Sorgfältig vermengen und servieren.</li>
+           </ol>'>
+        <div class="recipe-image">
+          <img src="biryani.jpg" alt="Biryani" />
+          <button class="favorite-btn"><i class="fas fa-heart"></i></button>
+        </div>
+        <div class="recipe-content">
+          <h2>Biryani</h2>
+          <p class="country">Indien</p>
+          <p class="description">Würziges Reisgericht mit Hühnchen, Safran und einer Vielzahl exotischer Gewürze.</p>
+          <div class="rating">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+          </div>
+          <button class="read-more">Mehr erfahren <i class="fas fa-arrow-right"></i></button>
+        </div>
+      </div>
+      
+      <!-- Rezept 7: Mansaf (Jordanien) -->
+      <div class="recipe-card" id="recipe-mansaf" data-country="Jordanien" data-title="Mansaf" data-description="Das Nationalgericht Jordaniens: Zartes Lamm in einer cremigen Joghurtsoße, serviert mit Reis." data-rating="4"
+           data-ingredients='<table>
+             <thead>
+               <tr><th>Zutat</th><th>Menge</th></tr>
+             </thead>
+             <tbody>
+               <tr><td>Lammfleisch</td><td>1 kg</td></tr>
+               <tr><td>Joghurt</td><td>500 g</td></tr>
+               <tr><td>Reis</td><td>300 g</td></tr>
+             </tbody>
+           </table>'
+           data-instructions='<ol>
+             <li>Lammfleisch in großen Stücken anbraten.</li>
+             <li>Mit Joghurt und Gewürzen langsam schmoren lassen.</li>
+             <li>Reis separat garen und auf einer Platte anrichten.</li>
+             <li>Das Lamm zusammen mit der Joghurtsoße über den Reis geben.</li>
+           </ol>'>
+        <div class="recipe-image">
+          <img src="mansaf.jpg" alt="Mansaf" />
+          <button class="favorite-btn"><i class="fas fa-heart"></i></button>
+        </div>
+        <div class="recipe-content">
+          <h2>Mansaf</h2>
+          <p class="country">Jordanien</p>
+          <p class="description">Das Nationalgericht Jordaniens: Zartes Lamm in einer cremigen Joghurtsoße, serviert mit Reis.</p>
+          <div class="rating">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <i class="fas fa-star-half-alt"></i>
+          </div>
+          <button class="read-more">Mehr erfahren <i class="fas fa-arrow-right"></i></button>
+        </div>
+      </div>
+      
+      <!-- Rezept 8: Shuwa (Oman) -->
+      <div class="recipe-card" id="recipe-shuwa" data-country="Oman" data-title="Shuwa" data-description="Langsam gegartes Lamm, mariniert in einer würzigen Mischung aus Kräutern und Gewürzen – typisch omanisch." data-rating="5"
+           data-ingredients='<table>
+             <thead>
+               <tr><th>Zutat</th><th>Menge</th></tr>
+             </thead>
+             <tbody>
+               <tr><td>Lamm</td><td>1,5 kg</td></tr>
+               <tr><td>Kräuter & Gewürze</td><td>nach Geschmack</td></tr>
+               <tr><td>Zwiebeln</td><td>2 Stück</td></tr>
+             </tbody>
+           </table>'
+           data-instructions='<ol>
+             <li>Lamm über Nacht in einer Gewürzmischung marinieren.</li>
+             <li>In einem traditionellen Ofen langsam garen.</li>
+             <li>Mit Reis und gerösteten Zwiebeln servieren.</li>
+             <li>Sorgfältig in Scheiben schneiden und genießen.</li>
+           </ol>'>
+        <div class="recipe-image">
+          <img src="shuwa.jpg" alt="Shuwa" />
+          <button class="favorite-btn"><i class="fas fa-heart"></i></button>
+        </div>
+        <div class="recipe-content">
+          <h2>Shuwa</h2>
+          <p class="country">Oman</p>
+          <p class="description">Langsam gegartes Lamm, mariniert in einer würzigen Mischung aus Kräutern und Gewürzen – typisch omanisch.</p>
+          <div class="rating">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+          </div>
+          <button class="read-more">Mehr erfahren <i class="fas fa-arrow-right"></i></button>
+        </div>
+      </div>
+      
+    </div>
+  </section>
+  
+  <!-- Modal für Rezeptdetails (mit Tabs: Zutaten & Anleitung) -->
+  <div class="modal" id="recipeModal">
+    <div class="modal-content" data-aos="zoom-in">
+      <span class="close-modal" id="closeModal">&times;</span>
+      <h2 id="modalTitle">Rezept Titel</h2>
+      <p id="modalCountry"><strong>Herkunft: </strong></p>
+      <p id="modalDescription">Rezept Beschreibung</p>
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="ingredients">Zutaten</button>
+        <button class="tab-btn" data-tab="instructions">Anleitung</button>
+      </div>
+      <div class="tab-content active" id="ingredientsContent">
+        <!-- Zutaten-Tabelle wird hier dynamisch eingefügt -->
+      </div>
+      <div class="tab-content" id="instructionsContent">
+        <!-- Ausführliche Schritt-für-Schritt-Anleitung wird hier dynamisch eingefügt -->
+      </div>
+      <div class="modal-share">
+        <span>Teilen: </span>
+        <a href="#" class="share-facebook"><i class="fab fa-facebook"></i></a>
+        <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="share-pinterest"><i class="fab fa-pinterest"></i></a>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Favoriten Modal -->
+  <div class="favorites-modal" id="favoritesModal">
+    <div class="favorites-content" data-aos="zoom-in">
+      <span class="close-favorites" id="closeFavorites">&times;</span>
+      <h2>Meine Favoriten</h2>
+      <div id="favoritesList">
+        <!-- Favorisierte Rezepte werden hier dynamisch angezeigt -->
+      </div>
+    </div>
+  </div>
+  
+  <!-- Signup/Anmeldung Modal -->
+  <div class="modal" id="signupModal">
+    <div class="modal-content" data-aos="zoom-in">
+      <span class="close-modal" id="closeSignup">&times;</span>
+      <h2>Anmelden / Newsletter</h2>
+      <form id="signupForm">
+        <input type="text" id="signupName" placeholder="Dein Name" required />
+        <input type="email" id="signupEmail" placeholder="Deine E-Mail" required />
+        <input type="password" id="signupPassword" placeholder="Passwort" required />
+        <button type="submit">Registrieren</button>
+      </form>
+    </div>
+  </div>
+  
+  <!-- Newsletter Abschnitt (optional statisch) -->
+  <section class="signup-section" data-aos="fade-up">
+    <div class="container">
+      <h2>Abonniere unseren Newsletter</h2>
+      <form id="newsletterForm">
+        <input type="email" id="newsletterEmail" placeholder="Deine E-Mail Adresse" required />
+        <button type="submit">Abonnieren</button>
+      </form>
+    </div>
+  </section>
+  
+  <!-- Back-to-Top Button -->
+  <div id="backToTop"><i class="fas fa-chevron-up"></i></div>
+  
+  <!-- Footer -->
+  <footer id="footer">
+    <div class="container">
+      <div class="social">
+        <a href="https://www.instagram.com/deininstagram/" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.facebook.com/deinfacebook/" target="_blank"><i class="fab fa-facebook"></i></a>
+        <a href="https://www.twitter.com/deintwitter/" target="_blank"><i class="fab fa-twitter"></i></a>
+      </div>
+      <p>&copy; 2025 Orientalische Rezepte. Alle Rechte vorbehalten.</p>
+    </div>
+  </footer>
+  
+  <!-- JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script>
+    AOS.init();
+
+    /* Dark Mode Toggle */
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    darkModeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      darkModeToggle.textContent = document.body.classList.contains('dark-mode') ? 'Light Mode' : 'Dark Mode';
+    });
+
+    /* Featured Slider */
+    const slides = document.querySelector('.featured-slider .slides');
+    const slideElements = document.querySelectorAll('.featured-slider .slide');
+    let currentSlide = 0;
+    const totalSlides = slideElements.length;
+    
+    document.getElementById('prevSlide').addEventListener('click', () => {
+      currentSlide = (currentSlide === 0) ? totalSlides - 1 : currentSlide - 1;
+      slides.style.transform = 'translateX(' + (-currentSlide * 100) + '%)';
+    });
+    document.getElementById('nextSlide').addEventListener('click', () => {
+      currentSlide = (currentSlide === totalSlides - 1) ? 0 : currentSlide + 1;
+      slides.style.transform = 'translateX(' + (-currentSlide * 100) + '%)';
+    });
+    setInterval(() => {
+      currentSlide = (currentSlide === totalSlides - 1) ? 0 : currentSlide + 1;
+      slides.style.transform = 'translateX(' + (-currentSlide * 100) + '%)';
+    }, 5000);
+    
+    /* Filter & Suche */
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const recipeCards = document.querySelectorAll('.recipe-card');
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterButtons.forEach(button => button.classList.remove('active'));
+        btn.classList.add('active');
+        const filterValue = btn.getAttribute('data-filter');
+        recipeCards.forEach(card => {
+          const cardCountry = card.getAttribute('data-country');
+          if (filterValue === 'all' || cardCountry === filterValue) {
+            card.style.display = 'flex';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('keyup', () => {
+      const filter = searchInput.value.toLowerCase();
+      recipeCards.forEach(card => {
+        const title = card.getAttribute('data-title').toLowerCase();
+        card.style.display = title.includes(filter) ? 'flex' : 'none';
+      });
+    });
+    
+    /* Rezept Modal mit Tabs */
+    const modal = document.getElementById('recipeModal');
+    const closeModal = document.getElementById('closeModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalCountry = document.getElementById('modalCountry');
+    const modalDescription = document.getElementById('modalDescription');
+    const ingredientsContent = document.getElementById('ingredientsContent');
+    const instructionsContent = document.getElementById('instructionsContent');
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const tab = btn.getAttribute('data-tab');
+        document.querySelectorAll('.tab-content').forEach(tc => {
+          tc.classList.remove('active');
+          if (tc.id === tab + "Content") { tc.classList.add('active'); }
+        });
+      });
+    });
+    
+    const readMoreButtons = document.querySelectorAll('.read-more');
+    readMoreButtons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const card = btn.closest('.recipe-card');
+        openRecipeModal(card);
+      });
+    });
+    function openRecipeModal(card) {
+      modalTitle.textContent = card.getAttribute('data-title');
+      modalCountry.innerHTML = '<strong>Herkunft: </strong>' + card.getAttribute('data-country');
+      modalDescription.textContent = card.getAttribute('data-description');
+      ingredientsContent.innerHTML = card.getAttribute('data-ingredients');
+      instructionsContent.innerHTML = card.getAttribute('data-instructions');
+      modal.style.display = 'flex';
+    }
+    closeModal.addEventListener('click', () => { modal.style.display = 'none'; });
+    window.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
+    
+    /* Favoriten-Funktion */
+    const favoriteButtons = document.querySelectorAll('.favorite-btn');
+    favoriteButtons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        btn.classList.toggle('active');
+        updateFavorites();
+      });
+    });
+    function updateFavorites() {
+      const favoritesList = document.getElementById('favoritesList');
+      favoritesList.innerHTML = '';
+      recipeCards.forEach(card => {
+        const favBtn = card.querySelector('.favorite-btn');
+        if (favBtn.classList.contains('active')) {
+          const title = card.getAttribute('data-title');
+          const country = card.getAttribute('data-country');
+          const recipeId = card.getAttribute('id');
+          
+          // Erstelle einen Container für den Favoriten-Eintrag
+          const item = document.createElement('div');
+          item.className = 'favorites-item';
+          item.setAttribute('data-recipe-id', recipeId);
+          
+          // Klickbarer Text, um das Rezept zu öffnen
+          const itemText = document.createElement('span');
+          itemText.textContent = title + " (" + country + ")";
+          itemText.addEventListener('click', () => {
+            // Öffne das entsprechende Rezept im Modal
+            const recipeCard = document.getElementById(recipeId);
+            openRecipeModal(recipeCard);
+            document.getElementById('favoritesModal').style.display = 'none';
+          });
+          
+          // Entfernen-Button
+          const removeBtn = document.createElement('button');
+          removeBtn.className = 'remove-fav';
+          removeBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
+          removeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            // Entferne den Favoritenstatus vom Rezept
+            const recipeCard = document.getElementById(recipeId);
+            recipeCard.querySelector('.favorite-btn').classList.remove('active');
+            updateFavorites();
+          });
+          
+          item.appendChild(itemText);
+          item.appendChild(removeBtn);
+          favoritesList.appendChild(item);
+        }
+      });
+    }
+    const favoritesBtn = document.getElementById('favoritesBtn');
+    const favoritesModal = document.getElementById('favoritesModal');
+    const closeFavorites = document.getElementById('closeFavorites');
+    favoritesBtn.addEventListener('click', () => {
+      updateFavorites();
+      favoritesModal.style.display = 'flex';
+    });
+    closeFavorites.addEventListener('click', () => { favoritesModal.style.display = 'none'; });
+    window.addEventListener('click', (e) => { if (e.target === favoritesModal) favoritesModal.style.display = 'none'; });
+    
+    /* Signup / Anmeldung Modal */
+    const signupBtn = document.getElementById('signupBtn');
+    const signupModal = document.getElementById('signupModal');
+    const closeSignup = document.getElementById('closeSignup');
+    signupBtn.addEventListener('click', () => { signupModal.style.display = 'flex'; });
+    closeSignup.addEventListener('click', () => { signupModal.style.display = 'none'; });
+    window.addEventListener('click', (e) => { if (e.target === signupModal) signupModal.style.display = 'none'; });
+    document.getElementById('signupForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('Vielen Dank für deine Anmeldung!');
+      this.reset();
+      signupModal.style.display = 'none';
+    });
+    
+    /* Newsletter Formular */
+    document.getElementById('newsletterForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = document.getElementById('newsletterEmail').value;
+      alert('Danke für deine Newsletter-Anmeldung, ' + email + '!');
+      this.reset();
+    });
+    
+    /* Back-to-Top Button */
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.style.display = window.pageYOffset > 300 ? 'block' : 'none';
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>  
+
+
